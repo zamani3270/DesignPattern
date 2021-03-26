@@ -6,5 +6,7 @@ namespace DesignPatterns.SingleTone
 {
     class Class1
     {
+        //comment
+        
     }
 }
