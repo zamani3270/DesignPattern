@@ -8,5 +8,6 @@ namespace DesignPatterns.SingleTone
     {
         //comment
         //samira
+        //sadfasdfasdf
     }
 }
