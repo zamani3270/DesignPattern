@@ -4,9 +4,7 @@ using System.Text;
 
 namespace DesignPatterns.SingleTone
 {
-    class Class4
+    class Class5
     {
-        public int MyProperty { get; set; }
-        ///comment
     }
 }
