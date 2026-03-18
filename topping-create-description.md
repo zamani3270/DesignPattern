@@ -13,7 +13,10 @@ The Create Topping API submits a new topping and returns the created entity deta
 | `POST` | `/vendors/{vendorId}/toppings` | `application/json` |
 
 - **Base URL:** Use your environment base URL.
-- **Path parameter:** `vendorId` (number) is used as the effective vendor identifier.
+- **Controller route:** `[Route("vendors/{vendorId:long}/toppings")]`
+- **Action route:** `[HttpPost]`
+- **Resolved endpoint path:** `/vendors/{vendorId}/toppings`
+- **Path parameter:** `vendorId` (long) is used as the effective vendor identifier.
 - **Note:** `vendorId` from route is used by the handler and overrides `vendorId` sent in request body.
 
 ---
