@@ -81,14 +81,14 @@ Content-Type: application/json
   "vendorId": 100,
   "signature": "TOP-100-0012345",
   "price": 30000,
-  "tax": 0.09,
   "stock": 90,
   "status": "Active",
   "approvedBy": 7001,
   "approvedAt": "2026-03-18T11:30:00Z",
   "rejectedBy": null,
   "rejectedAt": null,
-  "rejectionReason": null
+  "rejectionReason": null,
+  "isActive": true
 }
 ```
 
