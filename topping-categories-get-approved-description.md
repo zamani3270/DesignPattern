@@ -2,7 +2,7 @@
 
 This document is for **backoffice developers** integrating with the Menu Management API to fetch approved topping categories for a vendor.
 
-The Get Approved Topping Categories API returns only topping categories that are already approved for the given vendor. On success it returns **200 OK** with an array of `ApprovedToppingCategoryResponse` objects. If no approved records exist, the API returns an empty array.
+The Get Approved Topping Categories API returns only topping categories that are already approved for the given vendor. It also supports an optional name filter. On success it returns **200 OK** with an array of `ApprovedToppingCategoryResponse` objects. If no approved records exist, the API returns an empty array.
 
 ---
 
@@ -14,6 +14,7 @@ The Get Approved Topping Categories API returns only topping categories that are
 
 - **Base URL:** Use your environment base URL.
 - **Path parameter:** `vendorId` (number) identifies the vendor whose approved topping categories are requested.
+- **Query parameter:** `name` (optional string) filters approved categories by name.
 
 ---
 
@@ -27,18 +28,24 @@ This endpoint does not require a request body.
 |-----------|------|----------|-------------|
 | `vendorId` | number | Yes | Vendor identifier. |
 
+### Query parameter reference
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | No | Optional text filter passed to repository query. |
+
 ---
 
 ## Sample Request
 
 ```http
-GET /vendors/100/topping-categories/approved
+GET /vendors/100/topping-categories/approved?name=sauce
 ```
 
 ### cURL example
 
 ```bash
-curl -X GET "{baseUrl}/vendors/100/topping-categories/approved" \
+curl -X GET "{baseUrl}/vendors/100/topping-categories/approved?name=sauce" \
   -H "Accept: application/json"
 ```
 
@@ -80,7 +87,7 @@ Content-Type: application/json
 
 ### Error - 400 / 500
 
-- **400:** Validation error (for example invalid route parameter binding).
+- **400:** Validation error (for example invalid route/query parameter binding).
 - **500:** Unexpected server error.
 
 ---
