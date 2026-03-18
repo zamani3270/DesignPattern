@@ -2,7 +2,7 @@
 
 This document is for **backoffice developers** integrating with the Menu Management API to update a topping record for a vendor.
 
-The Update Topping API receives an existing topping id and creates an updated LQA version of that topping using the provided fields. It appends an outbox event (`topping.lqa.added`) and returns the updated topping payload. On success it returns **200 OK**.
+The Update Topping API receives an existing topping id and creates an updated LQA version of that topping using the provided fields. The handler resolves the topping category from the existing topping category signature to obtain tax percent, appends an outbox event (`topping.lqa.added`), and returns the updated topping payload. On success it returns **200 OK**.
 
 ---
 
@@ -29,15 +29,14 @@ The Update Topping API receives an existing topping id and creates an updated LQ
 |-------|------|----------|-------------|
 | `vendorId` | number | Yes | Vendor identifier in payload. Route `vendorId` is applied as source of truth. |
 | `name` | string | Yes | Topping name. |
-| `toppingCategorySignature` | string | Yes | Topping category signature for the updated version. |
 | `price` | number | Yes | Topping price amount (Toman). |
-| `taxIncluded` | boolean | Yes | Whether the price is tax-inclusive. |
 | `stock` | number | Yes | Current stock amount. |
-| `tax` | decimal | Yes | Tax value for the topping. |
 
 **Business rules:**
 - The base topping must exist for `(id, vendorId)`; otherwise request fails with not found.
+- The topping category for the current topping signature must exist; otherwise request fails with not found.
 - Update flow creates a new LQA topping version from existing signature/sku/vendor and request fields.
+- Tax percent is derived from topping category (`TaxPercent`) during creation of the new LQA topping.
 - Outbox event `topping.lqa.added` is emitted transactionally.
 
 ---
@@ -53,11 +52,8 @@ Content-Type: application/json
 {
   "vendorId": 100,
   "name": "Extra Cheese Premium",
-  "toppingCategorySignature": "TCAT-100-00098766",
   "price": 30000,
-  "taxIncluded": true,
-  "stock": 90,
-  "tax": 0.09
+  "stock": 90
 }
 ```
 
@@ -66,7 +62,7 @@ Content-Type: application/json
 ```bash
 curl -X PUT "{baseUrl}/vendors/100/toppings/12345" \
   -H "Content-Type: application/json" \
-  -d '{"vendorId":100,"name":"Extra Cheese Premium","toppingCategorySignature":"TCAT-100-00098766","price":30000,"taxIncluded":true,"stock":90,"tax":0.09}'
+  -d '{"vendorId":100,"name":"Extra Cheese Premium","price":30000,"stock":90}'
 ```
 
 ---
@@ -87,21 +83,21 @@ Content-Type: application/json
   "vendorId": 100,
   "signature": "TOP-100-0012345",
   "price": 30000,
-  "tax": 0.09,
   "stock": 90,
   "status": "Pending",
   "approvedBy": null,
   "approvedAt": null,
   "rejectedBy": null,
   "rejectedAt": null,
-  "rejectionReason": null
+  "rejectionReason": null,
+  "isActive": false
 }
 ```
 
 ### Error - 400 / 404 / 409 / 500
 
 - **400:** Validation error (invalid payload).
-- **404:** Topping not found for provided `id` and `vendorId`.
+- **404:** Topping not found for provided `id` and `vendorId`, or related topping category not found.
 - **409:** Concurrency conflict during transactional save.
 - **500:** Unexpected server error while updating topping.
 
