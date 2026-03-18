@@ -13,6 +13,7 @@ The Create Topping API submits a new topping and returns the created entity deta
 | `POST` | `/vendors/{vendorId}/toppings` | `application/json` |
 
 - **Base URL:** Use your environment base URL.
+- **Controller attributes:** `[ApiController]` and `[Route("vendors/{vendorId:long}/toppings")]`
 - **Controller route:** `[Route("vendors/{vendorId:long}/toppings")]`
 - **Action route:** `[HttpPost]`
 - **Resolved endpoint path:** `/vendors/{vendorId}/toppings`
